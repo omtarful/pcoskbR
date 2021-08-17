@@ -12,14 +12,40 @@ You can install the released version of pcoskbR from [CRAN](https://CRAN.R-proje
 install.packages("pcoskbR")
 ```
 
-## Searching for information about PCOS
+## Getting pages and filters you need to search for
 
-Here we select the page and the filter to get a dataframe of the result from PCOSKBR2.
+Here we show the list of pages in PCOSKBR2 we can search for:
 
 ``` r
 library(pcoskbR)
 #> Loading required package: rvest
 #> Loading required package: stringr
+listPages()
+#> Genes
+#> miRNA
+#> Diseases
+#> miRNA Diseases
+#> SNPs
+#> Pathways
+#> Ontologies
+```
+
+Let's say we want to search among the gene and we want to know the filters for Genes Here we show the list of pages in PCOSKBR2 we can search for.
+
+``` r
+listFilters(page = "Genes")
+#> All
+#> Manually curated
+#> Expression study
+#> Other sources
+```
+
+## Searching for information about PCOS
+
+Here we select the page and the filter to get a dataframe of the result from PCOSKBR2.
+
+``` r
+
 manually_curated_genes = browse(page = "Genes", filter = "Manually curated")
 head(manually_curated_genes)
 #>       Gene Symbol Entrez ID                                           Aliases

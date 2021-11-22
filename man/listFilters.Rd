@@ -2,7 +2,7 @@
 % Please edit documentation in R/listFilters.R
 \name{listFilters}
 \alias{listFilters}
-\title{lisFilters: Prints the filters for the page inputted.}
+\title{lisFilters: returns avector of strings containing the filters for the page inputted.}
 \usage{
 listFilters(page)
 }
@@ -13,5 +13,5 @@ listFilters(page)
 Prints all the filters for the page inputted.
 }
 \description{
-lisFilters: Prints the filters for the page inputted.
+lisFilters: returns avector of strings containing the filters for the page inputted.
 }

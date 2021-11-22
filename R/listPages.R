@@ -2,11 +2,12 @@
 
 #' listPages: Prints the pages in PCOSKBR2
 #'
-#' @return  Prints pages you can search for in PCCOSKBR2.
+#' @return  returns vector with pages you can search for in PCCOSKB.
 #' @export
 #'
 #' @examples
 listPages = function()
 {
-  cat(c("Genes", "miRNA", "Diseases", "miRNA Diseases", "SNPs", "Pathways", "Ontologies"), sep = "\n")
+  pages = c("Genes", "miRNA", "Diseases", "miRNA Diseases", "SNPs", "Pathways", "Ontologies")
+  return(pages)
 }

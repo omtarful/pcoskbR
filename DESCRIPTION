@@ -9,7 +9,26 @@ Description: More about what it does (maybe more than one line)
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
-Depends:
+imports:
   rvest (>= 1.0.0),
-  stringr (>= 1.4.0)
-RoxygenNote: 7.1.1
+  stringr (>= 1.4.0),
+  ggplot2 (>= 3.3.5),
+  reshape (>= 0.8.8)
+  dplyr (>= 1.0.5),
+  STRINGdb (>= 2.2.2),
+  igraph (>= 1.2.6),
+  hpar (>= 1.32.1),
+  biomaRt (>= 2.46.3),
+  visNetwork (>= 2.1.0),
+  plotly (>= 4.10.0),
+  readxl (>= 1.3.1)
+Suggets:
+  knitr,
+  rmarkdown
+RoxygenNote: 7.1.2
+Depends: 
+    R (>= 2.10)
+Suggests: 
+    rmarkdown,
+    knitr
+VignetteBuilder: knitr

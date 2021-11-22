@@ -7,7 +7,7 @@
 listPages()
 }
 \value{
-Prints pages you can search for in PCCOSKBR2.
+returns vector with pages you can search for in PCCOSKB.
 }
 \description{
 listPages: Prints the pages in PCOSKBR2

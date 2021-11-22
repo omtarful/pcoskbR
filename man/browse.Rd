@@ -7,14 +7,14 @@
 browse(page, filter = NULL, search_qry = "")
 }
 \arguments{
+\item{page}{A string representing which page will it retrieve the page from (i.e genes, miRNA, SNPs...).}
+
 \item{filter}{A string to filter tables using certain subsets.}
 
 \item{search_qry}{A string used to filter the tables according to a keyword.}
-
-\item{tab}{A string representing which page will it retrieve the page from (i.e genes, miRNA, SNPs...).}
 }
 \value{
-It returns a data frame with results fuiltered according to parameters.
+It returns a data frame with results filtered according to parameters.
 }
 \description{
 Browse: enables users to query the page for genes, miRNAs, SNPs, diseases, pathways, and ontology associated with PCOS.

@@ -1,6 +1,5 @@
-source("./R/browse.R")
 
-#' lisFilters: Prints the filters for the page inputted.
+#' lisFilters: returns avector of strings containing the filters for the page inputted.
 #'
 #' @param page It's a string for the page you want to obtain filters to.
 #'
@@ -13,7 +12,7 @@ listFilters = function(page)
   filters = NULL
   if(page == "Genes" | page == "miRNA")
   {
-    filters = getText(url = "http://pcoskb.bicnirrh.res.in/gene.php", css_selector = "#limitt")
+    filters =getText(url = "http://pcoskb.bicnirrh.res.in/gene.php", css_selector = "#limitt")
   }
   else if(page == "Diseases" | page == "miRNA Diseases")
   {
@@ -48,5 +47,5 @@ listFilters = function(page)
   {
     result = NULL
   }
-  cat(result, sep = "\n")
+  return(result)
 }

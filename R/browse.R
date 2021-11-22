@@ -3,13 +3,13 @@
 
 #' Browse: enables users to query the page for genes, miRNAs, SNPs, diseases, pathways, and ontology associated with PCOS.
 #'
-#' @param tab A string representing which page will it retrieve the page from (i.e genes, miRNA, SNPs...).
+#' @param page A string representing which page will it retrieve the page from (i.e genes, miRNA, SNPs...).
 #' @param filter A string to filter tables using certain subsets.
 #' @param search_qry A string used to filter the tables according to a keyword.
 #'
-#' @return It returns a data frame with results fuiltered according to parameters.
+#' @return It returns a data frame with results filtered according to parameters.
 #' @export
-#'
+#' @import rvest stringr
 #' @examples
 browse = function(page, filter = NULL, search_qry = "")
 {
@@ -122,6 +122,7 @@ getTableSection = function(url, n_col, tag, n_page)
   {
     start_index = 1 + n_col*(i - 1) # calculates start index  of the ith row in the name vector
     end_index = start_index + n_col - 1 #calculates the end_index of the ith row in the name vector
+    name = trimws(name)
     row = name[start_index:end_index] #slices the elements to make the ith row
     table_section = rbind(table_section, row) #binds the (i-1)th row to the ith row
   }
@@ -160,11 +161,11 @@ getEnd_page = function(url, tag)
 #it's the index of the vector name,it contains the text that u need to get the page
 getText = function(url, css_selector, number = NULL)
 {
-  pcoskb = session(url)
-  pcoskb = read_html(pcoskb)
+  pcoskb = rvest::session(url)
+  pcoskb = rvest::read_html(pcoskb)
   name = pcoskb %>%
-    html_nodes(css_selector) %>% # returns multiple nodes that contain the css_selector
-    html_text()
+    rvest::html_nodes(css_selector) %>% # returns multiple nodes that contain the css_selector
+    rvest::html_text()
   #this is the text u need to select a position in the vector, u didn't use it but u won't delete it cz it doesn't harm
   if(!is.null(number))
   {
@@ -179,7 +180,8 @@ getText = function(url, css_selector, number = NULL)
 # page: it's the page number
 construct_url = function(tab_choice, last_part_of_par, filter, n_page = 0, search_qry = "")
 {
-  filter = sub(" ", "%20", filter) #replaces the pages in par for %20 so it works in url
+  filter = gsub(" ", "%20", filter) #replaces the pages in par for %20 so it works in url
+  search_qry =  gsub(" ", "%20", search_qry)
   url = "http://pcoskb.bicnirrh.res.in/"
   par =  paste("&char=&qry=", search_qry, last_part_of_par, filter, sep = "")
   div = paste(tab_choice, ".php", sep ="") #concatinates the page with the .php

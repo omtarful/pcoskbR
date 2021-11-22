@@ -1,0 +1,55 @@
+---
+title: "The pcoskbR users guide"
+author: "Omar Hassoun"
+date: "`r Sys.Date()`"
+
+output: 
+  rmarkdown::html_vignette:
+  toc: TRUE
+
+vignette: >
+  %\VignetteIndexEntry{pcoskbR_vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+\tableofcontents
+
+# Intoduction
+PCOSKB is a manually curated knowledgebase on PCOS. PCOS-related information available through scientific literature is cross-linked with molecular, biochemical and clinical databases. Information on associated genes, SNPs, diseases, gene ontologies and pathways along with supporting reference literature is collated and integrated in PCOSKB. Various tools are embedded in the database such as Comorbidity analysis for estimating the risk of diseases to co-occur with PCOS; Network analysis for identifying enriched pathways and hub genes and Venn analysis for finding common and unique genes, pathways and ontologies. The r "pcoskbR" package, provides an R interface to [PCOSKB](http://pcoskb.bicnirrh.res.in/)
+
+#Selecting a dataset and filters in pcoskbR
+The R tool allows you to find information on genes, SNPs, diseases, gene ontologies and pathways associated with PCOS. The function `listPages()`will display information you can browse.
+
+```{r setup}
+library(pcoskbR)
+pages = listPages()
+```
+The function displays what kind of information we can query on the database.  The function `listFilters()` lists the filters you can apply to a given page. 
+```{r}
+gene_filters = listFilters("Genes")
+gene_filters
+```
+Now we can retrieve information on PCOS associated genes using the `browse()` function, using above filters.
+```{r}
+gene_dataset = browse(page = "Genes", filter = "Manually curated")
+head(gene_dataset)
+```
+#Tools available for analysis
+##Comorbidity Analysis
+The comorbidity Analysis tool allows us to check the comorbidity for PCOS and one or more diseases. We can call it using the function `generateComorbidityAnalysis()`. This function accepts a vector containing one or more diseases and the algorithm to perform the analysis. We can check a list of the available algorithms using the `listCAlgorithms()` function.
+```{r}
+listCAlgorithms()
+
+```
+In this example we will use the algorithm based on shared genes.
+```{r}
+generateComorbidityAnalysis(diseases = c("Anemia", "Kawasaki disease"), algorithm = "Shared genes")
+```
+The function returns a matrix with scores in each cell indicating the risk of comorbidity between two diseases and generates a heatmap with the risks.

@@ -1,5 +1,7 @@
 ---
 output: github_document
+always_allow_html: true
+
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -11,6 +13,8 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
+
+devtools::load_all(".")
 ```
 
 # pcoskbR
@@ -19,28 +23,116 @@ pcoskbR provides an R interface to acess datasets related to PCOS in PCOSKBR2. A
 
 ## Installation
 
-You can install the released version of pcoskbR from [CRAN](https://CRAN.R-project.org) with:
+You can install the developer version from github.
 
 ``` r
-install.packages("pcoskbR")
+devtools::install_github("gaospecial/ggVennDiagram")
 ```
-## Getting pages and filters you need to search for  
-  Here we show the list of pages in PCOSKBR2 we can search for:
-```{r}
-library(pcoskbR)
-listPages()
-```
-  Let's say we want to search among the gene and we want to know the filters for Genes
-  Here we show the list of pages in PCOSKBR2 we can search for. 
-```{r}
-listFilters(page = "Genes")
-```
-## Searching for information about PCOS
-  Here we select the page and the filter to get a dataframe of the result from PCOSKBR2.
-```{r}
+# Intoduction
+PCOSKB is a manually curated knowledgebase on PCOS. PCOSKBR allows us. Information on associated genes, SNPs, diseases, gene ontologies and pathways along with supporting reference literature is collated and integrated in PCOSKB. Various tools are embedded in the database such as Comorbidity analysis for estimating the risk of diseases to co-occur with PCOS; Network analysis for identifying enriched pathways and hub genes and Venn analysis for finding common and unique genes, pathways and ontologies. The r "pcoskbR" package, provides an R interface to [PCOSKB](http://pcoskb.bicnirrh.res.in/). This vignette details pcoskbR functionalities and provides a number of example usecases that can be used as the basis for specifying your own queries.
 
-manually_curated_genes = browse(page = "Genes", filter = "Manually curated")
-head(manually_curated_genes)
+# Selecting page and filters in pcoskbR
+The R tool allows you to find information on genes, SNPs, diseases, gene ontologies and pathways associated with PCOS. The function `listPages()`will display information you can browse.
+
+```{r setup}
+library(pcoskbR)
+pages = listPages()
 ```
+The function displays what kind of information associated to PCOS we can query in the database.  The function `listFilters()` lists the filters you can apply to a given page. 
+```{r}
+gene_filters = listFilters("Genes")
+gene_filters
+```
+Now we can retrieve information on PCOS associated genes using the `browse()` function, using above filters.
+```{r}
+gene_dataset = browse(page = "Genes", filter = "Manually curated")
+head(gene_dataset)
+```
+# Tools available for analysis
+## Comorbidity Analysis 
+The comorbidity Analysis tool allows us to check the comorbidity for PCOS and one or more diseases. We can call it using the function `generateComorbidityAnalysis()`. This function accepts a \code{vector} containing one or more diseases and the algorithm to perform the analysis. We can check a list of the available algorithms using the `listCAlgorithms()` function. For more details on how are scores are calculated refer to \href{https://www.nature.com/articles/s41598-020-71418-8}{PCOSKBR2: a database of genes, diseases, pathways, and networks associated with polycystic ovary syndrome}.
+```{r}
+listCAlgorithms()
+
+```
+In this example we will use the algorithm based on shared genes. 
+```{r}
+generateComorbidityAnalysis(disease_list = c("Anemia", "Kawasaki disease"), algorithm = "Shared genes")
+```
+The function returns a matrix with scores in each cell indicating the risk of comorbidity between two diseases and generates a heatmap with the risks.
+
+## Network Analysis
+### Disease-Disease Network
+This tools allows us to illustrate a disease-disease network through shared genes. It can be called using the function `getNetworkAnalysis()`. It returns a dataframe with all input diseases and associated genes and displays a network of diseases where size of the node shows the size of a node is proportional to the number of genes associated with the disease and the width of each edge is proportional to the number the shared genes. 
+```{r}
+getNetworkAnalysis(disease_list = c("Cardiovascular Abnormalities","Xerotic keratitis", "Anemia",
+ "Breast Cancer"), dataset = "Genes")
+
+```
+If this your first time using \code{pcoskbR} , you might wonder how to find diseases associated with PCOS. The function `listDiseases()` can be used to see all diseases associated with PCOS in the database.
+```{r}
+listDiseases(dataset = "Genes", disease_group = "Renal Disorder")
+```
+The \code{dataset} argument can either have "Genes" or "miRNAs" as value. To see the list of disease groups that can be used as input, you can use tbe 'listDiseaseGroup()' function. Default values are "Genes" and "all" for the \code{dataset} and \code{disease_group} arguments.  
+```{r}
+listDiseaseGroup(dataset = "Genes")
+```
+This list of disease groups can be used as input in the \code{listDiseases()} function.
+
+### Pathway Analysis
+#### Getting enriched pathways
+Explain about use of enriched pathways.
+The pathway analysis tool gives a \code{data.frame} of enriched pathways for selected diseases. We call it using the `generatePathwayAnalysis()` function. It accepts \code{disease_list}, \code{dataset} and \code{database} as arguments. Database can either be "KEGG" or "Reactome".
+```{r}
+pathways.df = PathwayAnalysis(disease_list = c("Anemia"),
+         dataset = "Genes",
+          database = "KEGG")
+head(pathways.df)
+```
+This function returns a list of enriched pathways. Enriched pathways are identifed based 
+on hypergeometric distribution with the threshold p value set as 0.05 (gene dataset) and 0.001 (miRNA dataset) 
+based on the data size.
+
+#### Visualizing enriched pathways
+Output of the `generatePathwayAnalysis()` is used as input for the `viewNetwork()` function. This functions allows us to visualize the pathways as a network.
+```{r}
+viewNetwork(pathways.df)
+```
+Each pathway is represented as a node and is connected to other pathways in the network based on common genes or miRNAs. Te thickness of the edge is proportional to the number of shared genes or miRNAs. In this example there are 151 nodes. We can also filter the data.frame to just obtain a network with enriched pathways for example.
+```{r}
+#filter dataframe to only obtain enriched pathways
+enriched_pathways.df = pathways.df[which(pathways.df$`Hypergeometric probability` <= 0.005),]
+viewNetwork(enriched_pathways.df)
+```
+
+### Gene Network Analysis
+This tool allows us to generate hypothesis about disease targets based on network properties. Experimentally validated interactions from STRING v11 were used for creating gene interaction networks for enriched pathways. Critical genes in these pathways were identifed based on network topological properties such as degree, closeness centrality, and betweenness centrality calculated using [igraph](https://igraph.org/) package in R. You can call it using the `getGeneNetworkAnalysis()` function.
+```{r}
+gene_tbl.df = getGeneNetworkAnalysis(disease_list =  c("Psychomotor Disorders", "Psychosexual Disorders" , "Pubertal Disorder"),
+database = "Reactome")
+```
+Check [PCOSKB](http://pcoskb.bicnirrh.res.in/) for details on how bottleneck genes and hub genes are chosen.
+
+#### Visualizing interactions
+We can also visualize all gene-gene interactions using `viewInteractions()` function. It has one argument \code{gene} and the value is a gene Symbol.
+```{r}
+viewInteractions("INS")
+```
+
+## Venn Analysis
+This tool can be used to illustrate the unique and/or common genes, pathways and ontologies for 2 or more (up to 6) diseases. The function `getVennAnalysis()` is used for that purpose. Function arguments a vector \code{disease_list} of  disease of up to 6 diseases. There is alos the options argument that can be either "Genes", "Pathways" or   
+
+```{r}
+getVennAnalysis(disease_list = c("PCOS", "Bipolar Disorder", "Mental Depression", "Schizophrenia", "Autistic Disorder", "Alzheimer Disease" ), option = "Genes")
+```
+Object will render the graph locally in your web browser or in the RStudio viewer.
+
+
+This outputs an interactive web-based Venn-Diagram diagram created using [ggVennDiagram](https://cran.r-project.org/web/packages/ggVennDiagram/index.html) and rendered using [plotly](https://plotly.com/).
+
+
+
+
+
 
 

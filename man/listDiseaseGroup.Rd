@@ -2,16 +2,22 @@
 % Please edit documentation in R/listDiseaseGroup.R
 \name{listDiseaseGroup}
 \alias{listDiseaseGroup}
-\title{List Disease Group}
+\title{List Disease Groups}
 \usage{
-listDiseaseGroup(dataset = "Genes")
+\code{listDiseaseGroup(dataset = c("Genes", "miRNAs"))}
 }
 \arguments{
-\item{dataset}{String containing either the miRNAs or Genes dataset. Genes is the default.}
+\item{dataset}{Dataset. Either "miRNA" or "Genes".}
 }
 \value{
-character vector of disease groups in input dataset.
+A \code{vector} containing disease groups.
 }
 \description{
-List Disease Group
+Lists disease groups given a dataset.
+}
+\examples{
+\code{listDiseaseGroup(dataset = "Genes")}
+}
+\author{
+Omar Hassoun
 }

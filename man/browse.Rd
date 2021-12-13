@@ -2,20 +2,28 @@
 % Please edit documentation in R/browse.R
 \name{browse}
 \alias{browse}
-\title{Browse: enables users to query the page for genes, miRNAs, SNPs, diseases, pathways, and ontology associated with PCOS.}
+\title{Browse: Retrieves information from the PCOSKB database}
 \usage{
-browse(page, filter = NULL, search_qry = "")
+\code{browse(page = c("Genes", "miRNA", "Diseases", "miRNA Diseases", "SNPs", "Pathways", "Ontologies"),
+ filter = NULL,
+ search_qry = "")}
 }
 \arguments{
-\item{page}{A string representing which page will it retrieve the page from (i.e genes, miRNA, SNPs...).}
+\item{page}{Page from which data is retrieved. A possible list of pages can be retreived using the \link[pcoskbR]{listPage} function.}
 
-\item{filter}{A string to filter tables using certain subsets.}
+\item{filter}{Filter (one) that should be used in the query. A possible list of pages can be retieved using the \link[pcoskbR]{listFilters} function.}
 
-\item{search_qry}{A string used to filter the tables according to a keyword.}
+\item{search_qry}{Searches a keyword in the query.}
 }
 \value{
-It returns a data frame with results filtered according to parameters.
+A \code{data.frame}. Size and attributes depend on query.
 }
 \description{
-Browse: enables users to query the page for genes, miRNAs, SNPs, diseases, pathways, and ontology associated with PCOS.
+This function scrapes data from PCOSKB. Given a set of filters and corresponding values, it retrieves information about genes, miRNAs, SNPs, diseases, pathways, and ontology associated with PCOS.
+}
+\examples{
+ \code{browse(page = "Genes", filter = "Manually curated", search_qry = "Fem")}
+}
+\author{
+Omar Hassoun
 }

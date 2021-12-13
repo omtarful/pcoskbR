@@ -2,16 +2,22 @@
 % Please edit documentation in R/listFilters.R
 \name{listFilters}
 \alias{listFilters}
-\title{lisFilters: returns avector of strings containing the filters for the page inputted.}
+\title{lisFilters}
 \usage{
-listFilters(page)
+\code{listFilters(page)}
 }
 \arguments{
-\item{page}{It's a string for the page you want to obtain filters to.}
+\item{page}{Page. A possible list of algorithms can be retrieved using the \code{listPages} function.}
 }
 \value{
-Prints all the filters for the page inputted.
+A \code{vector} containing functions.
 }
 \description{
-lisFilters: returns avector of strings containing the filters for the page inputted.
+Lists or search filters available for a given page in PCOSKBR.
+}
+\examples{
+\code{listFilters(page = "Genes")}
+}
+\author{
+Omar Hassoun
 }

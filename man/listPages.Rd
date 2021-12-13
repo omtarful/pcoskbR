@@ -2,13 +2,19 @@
 % Please edit documentation in R/listPages.R
 \name{listPages}
 \alias{listPages}
-\title{listPages: Prints the pages in PCOSKBR2}
+\title{listPages}
 \usage{
-listPages()
+\code{listPages()}
 }
 \value{
-returns vector with pages you can search for in PCCOSKB.
+A \code{vector} of pages.
 }
 \description{
-listPages: Prints the pages in PCOSKBR2
+Lists pages available in PCOSKBR2.
+}
+\examples{
+\code{listPages()}
+}
+\author{
+Omar Hassoun
 }

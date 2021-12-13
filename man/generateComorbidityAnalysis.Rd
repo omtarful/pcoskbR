@@ -4,18 +4,25 @@
 \alias{generateComorbidityAnalysis}
 \title{Comorbidity Analysis Tool}
 \usage{
-generateComorbidityAnalysis(disease_list, algorithm)
+\code{generateComorbidityAnalysis(disease_list =  c("Psychomotor Disorders", "Psychosexual Disorders" , "Pubertal Disorder"),
+ algorithm = c("Shared genes", "Uniqueness of shared genes", "Shared ontologies", "Network-based seperation"))}
 }
 \arguments{
-\item{disease_list}{character vector containing diseases to be analyzed.}
+\item{disease_list}{Diseases for which comorbidity with PCOS will be analyzed. A possible list of diseases can be retrieved using the \code{listDiseases} function.}
 
-\item{algorithm}{character vector containing algorithm to be perform the analysis.}
+\item{algorithm}{One of four algorithms used to perform the analysis. A possible list of algorithms can be retrieved using the \code{listAlgorithms} function.}
 }
 \value{
-prints a heatmap containing comorbidity between input diseases.
+A \code{matrix} with scores in each cell indicating the risk of comorbidity between two diseases and generates a heatmap with the risks.
 }
 \description{
-This tool can be used to predict comorbidity based on shared genes and their ontologies,
-uniqueness of the shared genes, and the network-based separation between them. For more details of
+Given a list of diseases used as input, this tool can be used to predict comorbidity according to an algorithm. For more details of
  the methodology refer to \href{https://www.nature.com/articles/s41598-020-71418-8}{PCOSKBR2: a database of genes, diseases, pathways, and networks associated with polycystic ovary syndrome}.
+}
+\examples{
+\code{generateComorbidtiyAnalysis(disease_list = c("Psychomotor Disorders", "Psychosexual Disorders" , "Pubertal Disorder"),
+                                   algorithm = "Shared genes")}
+}
+\author{
+Omar Hassoun
 }

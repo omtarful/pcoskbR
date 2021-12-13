@@ -2,18 +2,26 @@
 % Please edit documentation in R/getGeneNetworkAnalysis.R
 \name{getGeneNetworkAnalysis}
 \alias{getGeneNetworkAnalysis}
-\title{Gene Network Analysis:  It provides an output of a list of genes with their network properties and tissue specific interactions for each gene.  tab.}
+\title{Gene Network Analysis}
 \usage{
-getGeneNetworkAnalysis(disease_list, database)
+\code{getGeneNetworkAnalysis(disease_list, database = c("KEGG", "Reactome"))}
 }
 \arguments{
-\item{disease_list}{character vector containing diseases to be analyzed.}
+\item{disease_list}{Diseases for which comorbidity with PCOS will be analyzed. A possible list of diseases can be retrieved using the \code{listDiseases} function.}
 
-\item{database}{character vector containing the database from which pathways will be extracted. It can either be "KEGG" or "Reactome".}
+\item{database}{Database from which pathways will be extracted. It can either be "KEGG" or "Reactome".}
 }
 \value{
-a dataframe containing a list of genes with network properties and tissue specific interactions.
+A \code{data.frame} containing genes with network properties and tissue specific interactions.
 }
 \description{
-Gene Network Analysis:  It provides an output of a list of genes with their network properties and tissue specific interactions for each gene.  tab.
+This function produces as output a list of genes with their network properties and tissue specific interactions given a set of diseases. For more details of
+ the methodology refer to \href{https://www.nature.com/articles/s41598-020-71418-8}{PCOSKBR2: a database of genes, diseases, pathways, and networks associated with polycystic ovary syndrome}.
+}
+\examples{
+\code{getGeneNetworkAnalysis(disease_list =  c("Psychomotor Disorders", "Psychosexual Disorders" , "Pubertal Disorder"),
+database = "Reactome")}
+}
+\author{
+Omar Hassoun
 }

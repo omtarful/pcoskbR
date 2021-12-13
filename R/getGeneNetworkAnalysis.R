@@ -1,15 +1,30 @@
-#' Gene Network Analysis:  It provides an output of a list of genes with their network properties and tissue specific interactions for each gene.  tab.
+#' Gene Network Analysis
+#' @description
+#' This function produces as output a list of genes with their network properties and tissue specific interactions given a set of diseases. For more details of
+#'  the methodology refer to \href{https://www.nature.com/articles/s41598-020-71418-8}{PCOSKBR2: a database of genes, diseases, pathways, and networks associated with polycystic ovary syndrome}.
+#' @usage
+#' \code{getGeneNetworkAnalysis(disease_list, database = c("KEGG", "Reactome"))}
+#' @param disease_list Diseases for which comorbidity with PCOS will be analyzed. A possible list of diseases can be retrieved using the \code{listDiseases} function.
+#' @param database Database from which pathways will be extracted. It can either be "KEGG" or "Reactome".
+#' @author Omar Hassoun
 #'
-#' @param disease_list character vector containing diseases to be analyzed.
-#' @param database character vector containing the database from which pathways will be extracted. It can either be "KEGG" or "Reactome".
-#'
-#' @return a dataframe containing a list of genes with network properties and tissue specific interactions.
+#' @return A \code{data.frame} containing genes with network properties and tissue specific interactions.
 #' @export
-#'
 #' @examples
+#' \code{getGeneNetworkAnalysis(disease_list =  c("Psychomotor Disorders", "Psychosexual Disorders" , "Pubertal Disorder"),
+#' database = "Reactome")}
 getGeneNetworkAnalysis = function(disease_list, database)
 {
   dataset = "Genes"
+  if(missing(database))
+    stop("Argument 'database' must be specified")
+  if(missing(disease_list))
+    stop("Argument 'disease_list' must be specified")
+  if(!(database != "KEGG" | database == "Reactome"))
+    stop("Argument database can either be \"KEGG\" or \"Reactome\"")
+  if(!isInDataset(disease_list = disease_list, dataset = dataset))
+    stop("Argument 'disease_list' contains one or more diseases not found in dataset")
+
   disease_table = getDiseaseTable(disease_list, dataset)
   gene_population = sapply(disease_table$`Gene Symbol`, strsplit, split = ", ")
   gene_population = unname(unlist(gene_population))
@@ -73,17 +88,25 @@ generateGeneNetworkTable = function(gene_population)
 
 }
 
-#' View Interactions: Shows a network of interactions for an input gene.
+#' View Interactions
+#' @description
+#' Shows network of interactions of input gene with other genes and vizualise tissue specific interactions.
+#' @usage
+#' \code{viewInteractions(gene, tissue = "all")}
+#' @param gene Gene Symbol.
+#' @param tissue Tissue Type. A possible list of tissues can be vizualised using the \code{listTissues} function.
 #'
-#' @param gene A character containing the gene name (symbol)
-#' @param tissue character containing tissue type.
-#'
-#' @return
+#' @author Omar Hassoun
+#' @return Network of of all genes that interact with input gene.
 #' @export
 #'
 #' @examples
+#' \code{viewInteractions(gene = "INS", tissue = "adipose tissue")}
 viewInteractions = function(gene, tissue = "all")
 {
+  if(missing(gene))
+    stop("Argument 'gene' must be specified")
+  #check if tissue is in tissue options and create a function to list tissues
   #maps gene as string id
   single_gene <- string_db$map(as.data.frame(gene), "gene", removeUnmappedRows = TRUE )
   neighbors = string_db$get_neighbors(single_gene$STRING_id)
@@ -160,8 +183,8 @@ viewInteractions = function(gene, tissue = "all")
                       color = "orange")
   #graph
   #vizualize graph
-  print(visNetwork::visNetwork(nodes = nodes, edges = edges, width = "100%") %>%
-                                                                      visNetwork::visIgraphLayout())
+  visNetwork::visNetwork(nodes = nodes, edges = edges, width = "100%") %>%
+                                                                      visNetwork::visIgraphLayout()
   #add option to change the color
 
 }
@@ -179,7 +202,31 @@ removeSmallComponent = function(g)
   return(g2)
 }
 
-
+#' listTissues
+#' @description
+#' Tissues used as input for \link[pcoskbR]{viewInteractions} function.
+#' @usage
+#' \code{listTissues()}
+#' @return \code{vector} of all tissues.
+#' @export
+#'
+#' @examples
+#' \code{listTissues()}
+listTissues = function()
+{
+  tissues = c("adipose tissue", "adrenal gland", "appendix",
+              "bone marrow", "breast", "bronchus", "caudate", "cerebellum", "cerebral cortex",  "cervix, uterine",
+              "colon", "duodenum", "endometrium 1", "endometrium 2",  "epididymis",
+              "esophagus", "fallopian tube","gallbladder", "heart muscle", "hippocampus",
+              "kidney", "liver", "lung", "lymph node", "nasopharynx","oral mucosa",
+              "ovary", "pancreas", "parathyroid gland", "placenta", "prostate", "rectum",
+              "salivary gland", "seminal vesicle", "skeletal muscle", "skin 1", "skin 2",
+              "small intestine",   "smooth muscle", "soft tissue 1", "soft tissue 2",
+              "spleen" ,  "stomach 1", "stomach 2",  "testis", "thyroid gland", "tonsil",
+              "urinary bladder", "vagina", "N/A","hypothalamus", "retina",
+              "pituitary gland", "choroid plexus")
+  return(tissues)
+}
 
 
 

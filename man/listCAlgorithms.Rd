@@ -4,11 +4,17 @@
 \alias{listCAlgorithms}
 \title{Algorithm for Comorbidity Analysis}
 \usage{
-listCAlgorithms()
+\code{listAlgorithms()}
 }
 \value{
 
 }
 \description{
-Algorithm for Comorbidity Analysis
+Lists algorithm to be inputed in \code{generateComorbidityAnalysis()} function.
+}
+\examples{
+\code{listAlgorithms()}
+}
+\author{
+Omar Hassoun
 }

@@ -2,18 +2,21 @@
 % Please edit documentation in R/VennAnalysis.R
 \name{getVennAnalysis}
 \alias{getVennAnalysis}
-\title{Venn Analysis: This tool can be used to illustrate the unique and/or common genes, pathways and ontologies for 2 or more (up to 6) diseases.}
+\title{Venn Analsis Tool}
 \usage{
 getVennAnalysis(disease_list, option = "Genes")
 }
 \arguments{
-\item{disease_list}{character vector containing diseases to be analyzed.}
+\item{disease_list}{Diseases for which comorbidity with PCOS will be analyzed. A possible list of diseases can be retrieved using the \code{listDiseases} function.}
 
-\item{option}{a character containing string to be analyzed. It can either be a "Genes", "Pathways" or "Ontologies"}
+\item{option}{It can either be "Genes", "Pathways" or "Ontologies".}
 }
 \value{
-
+A Venn diagram.
 }
 \description{
-Venn Analysis: This tool can be used to illustrate the unique and/or common genes, pathways and ontologies for 2 or more (up to 6) diseases.
+Illustrates shared genes, ontologies or pathways between diseases as 6-way Venn Diagram. It takes a vector of up to 6 diseases and options.
+}
+\examples{
+\code{getVennAnalysis(disease_list = c("Tangier Disease", "Hypercholesterolemia", "Neuropathy" ), option = "Genes")}
 }

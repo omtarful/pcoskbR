@@ -1,5 +1,5 @@
+
 getDiseaseTable =  function(disease_list, dataset = "Genes") {
-  #add function to check if every disease is part of the dataset
   disease_table = NULL #initialize table of diseases u need to do the analysis
   page = NULL
   if (dataset == "miRNAs") {
@@ -7,7 +7,7 @@ getDiseaseTable =  function(disease_list, dataset = "Genes") {
   } else if (dataset == "Genes") {
     page = "Diseases"
   } else {
-    #return error
+    stop("Argument 'dataset' is not valid.")
   }
 
   for (disease in disease_list) {
@@ -20,8 +20,25 @@ getDiseaseTable =  function(disease_list, dataset = "Genes") {
   return(disease_table)
 }
 
+#' Network Analysis
+#' @description Iluustrates a disease-disease network through shared genes. Each node represents a disease. A connection is made between two nodes is done if they share one or more genes.
+#' Size of the node represents the number of genes associated with the given disease. The width of each edge increases with a higher number of shared genes.
+#' @usage
+#' \code{getNetworkAnalysis(disease_list, dataset = c("miRNAs", "Genes")}
+#' @param disease_list Diseases for which comorbidity with PCOS will be analyzed. A possible list of diseases can be retrieved using the \code{listDiseases} function.
+#' @param dataset Dataset. It can either be "miRNAs" or "Genes".
+#' @author Omar Hassoun
+#' @return Disease-Disease Network.
+#' @export
+#'
+#' @examples
+#' \code{getNetworkAnalysis(disease_list = c("Keratomalacia","Xerotic keratitis"), dataset = "Genes")}
 getNetworkAnalysis = function(disease_list, dataset)
 {
+  if(missing(disease_list))
+    stop("Argument 'disease_list' must be specified")
+  if(missing(dataset))
+    stop("Argument 'dataset' must be specified")
   disease_table = getDiseaseTable(disease_list, dataset)
   ##this creates the node table
   nodes = data.frame(id = disease_table$Disease, #this is an id
@@ -30,7 +47,7 @@ getNetworkAnalysis = function(disease_list, dataset)
   #this assigns a size to each node depending on the amount of genes the disease has
   for (row in 1:nrow(nodes))
   {
-    genes = stringr::str_split(disease_table[row, 2], pattern = ", ")[[1]]
+    genes = countGenes(disease_table[row, 2])
     nodes[row, "value"] = length(genes)
   }
   #this creates all pairs of diseases  and edge dataframe
@@ -60,8 +77,7 @@ getNetworkAnalysis = function(disease_list, dataset)
   {
     edges = edges[-valid,]
   }
-  print(visNetwork::visNetwork(nodes, edges, width = "100%"))
-  return(disease_table)
+  visNetwork::visNetwork(nodes, edges, width = "100%")
 }
 
 

@@ -2,18 +2,24 @@
 % Please edit documentation in R/getGeneNetworkAnalysis.R
 \name{viewInteractions}
 \alias{viewInteractions}
-\title{View Interactions: Shows a network of interactions for an input gene.}
+\title{View Interactions}
 \usage{
-viewInteractions(gene, tissue = "all")
+\code{viewInteractions(gene, tissue = "all")}
 }
 \arguments{
-\item{gene}{A character containing the gene name (symbol)}
+\item{gene}{Gene Symbol.}
 
-\item{tissue}{character containing tissue type.}
+\item{tissue}{Tissue Type. A possible list of tissues can be vizualised using the \code{listTissues} function.}
 }
 \value{
-
+Network of of all genes that interact with input gene.
 }
 \description{
-View Interactions: Shows a network of interactions for an input gene.
+Shows network of interactions of input gene with other genes and vizualise tissue specific interactions.
+}
+\examples{
+\code{viewInteractions(gene = "INS", tissue = "adipose tissue")}
+}
+\author{
+Omar Hassoun
 }

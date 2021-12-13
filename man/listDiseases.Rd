@@ -4,7 +4,7 @@
 \alias{listDiseases}
 \title{List Diseases: list diseases according to each dataset and disease group.}
 \usage{
-listDiseases(dataset, disease_group)
+listDiseases(dataset = "Genes", disease_group = "all")
 }
 \arguments{
 \item{dataset}{character containing the dataset. Can be either miRNA or Genes.}
@@ -12,7 +12,7 @@ listDiseases(dataset, disease_group)
 \item{disease_group}{character containing disease group. Use \link[pcoskbR]{listDiseaseGroup()}for more info on diease groups.}
 }
 \value{
-character vector with the diseases belonging to the disease group and dataset.
+A \code{vector} with the diseases belonging to the disease group and dataset.
 }
 \description{
 List Diseases: list diseases according to each dataset and disease group.

@@ -1,18 +1,27 @@
-#How does it do it?
-#it uses the rvest package to scrape and submit the filters in the website
 
-#' Browse: enables users to query the page for genes, miRNAs, SNPs, diseases, pathways, and ontology associated with PCOS.
+#it uses the rvest package to scrape and submit the filters in the website
+#' Browse: Retrieves information from the PCOSKB database
+#' @description
+#' This function scrapes data from PCOSKB. Given a set of filters and corresponding values, it retrieves information about genes, miRNAs, SNPs, diseases, pathways, and ontology associated with PCOS.
+#' @usage
+#' \code{browse(page = c("Genes", "miRNA", "Diseases", "miRNA Diseases", "SNPs", "Pathways", "Ontologies"),
+#'  filter = NULL,
+#'  search_qry = "")}
+#' @param page Page from which data is retrieved. A possible list of pages can be retreived using the \link[pcoskbR]{listPage} function.
+#' @param filter Filter (one) that should be used in the query. A possible list of pages can be retieved using the \link[pcoskbR]{listFilters} function.
+#' @param search_qry Searches a keyword in the query.
 #'
-#' @param page A string representing which page will it retrieve the page from (i.e genes, miRNA, SNPs...).
-#' @param filter A string to filter tables using certain subsets.
-#' @param search_qry A string used to filter the tables according to a keyword.
-#'
-#' @return It returns a data frame with results filtered according to parameters.
-#' @export
+#' @return A \code{data.frame}. Size and attributes depend on query.
+#' @author Omar Hassoun
 #' @import rvest stringr
 #' @examples
+#'  \code{browse(page = "Genes", filter = "Manually curated", search_qry = "Fem")}
 browse = function(page, filter = NULL, search_qry = "")
 {
+  if(!is.null(filter) & !isFilter(filter, page))
+    stop("Argument 'filter' is not valid" )
+  if(!page %in% listPages())
+    stop("Argument 'page' is not valid")
   #this is the url of the page u scrape data from
   url = "http://pcoskb.bicnirrh.res.in/"
   #Initialize start_page and end_page variables
@@ -188,6 +197,17 @@ construct_url = function(tab_choice, last_part_of_par, filter, n_page = 0, searc
   #this concatinates an url depending on the table
   url = paste(url, div, "?page=", n_page, par, sep = "") #concatinates everything
   return(url)
+}
+#checks if filter exists
+isFilter = function(filter, page)
+{
+  if(is.null(filter))
+    return(TRUE)
+  if(missing(page))
+    stop("Argument 'page' must be specified.")
+  #returns false if filter doesn't exist true otherwise
+  filters = listFilters(page)
+  return(filter %in% filters)
 }
 
 

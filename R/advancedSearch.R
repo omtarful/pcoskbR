@@ -5,10 +5,10 @@ advancedSearch = function(gene_list)
     query = paste0(query, " ", paste0("[Gene]{", gene, "}"))
   }
   url = "http://pcoskb.bicnirrh.res.in/advsrh.php"
-  advcd_search  = session(url)
-  html_node = read_html(advcd_search)
+  advcd_search  = rvest::session(url)
+  html_node = rvest::read_html(advcd_search)
 
-  search_form = html_node %>% html_form()
+  search_form = html_node %>% rvest::html_form()
   search_form = search_form[[1]]
   search = search_form %>% html_form_set(qry = query, make = "Associated Pathways")
 

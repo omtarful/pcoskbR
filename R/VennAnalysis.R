@@ -1,14 +1,25 @@
-#' Venn Analysis: This tool can be used to illustrate the unique and/or common genes, pathways and ontologies for 2 or more (up to 6) diseases.
+#' Venn Analsis Tool
+#' @description
+#' Illustrates shared genes, ontologies or pathways between diseases as 6-way Venn Diagram. It takes a vector of up to 6 diseases and options.
+#' @param disease_list Diseases for which comorbidity with PCOS will be analyzed. A possible list of diseases can be retrieved using the \code{listDiseases} function.
+#' @param option It can either be "Genes", "Pathways" or "Ontologies".
 #'
-#' @param disease_list character vector containing diseases to be analyzed.
-#' @param option a character containing string to be analyzed. It can either be a "Genes", "Pathways" or "Ontologies"
-#'
-#' @return
+#' @return A Venn diagram.
 #' @export
 #'
 #' @examples
+#' \code{getVennAnalysis(disease_list = c("Tangier Disease", "Hypercholesterolemia", "Neuropathy" ), option = "Genes")}
 getVennAnalysis = function(disease_list, option  = "Genes")
 {
+  #check if Venn Analysis
+  if(missing(disease_list))
+    stop("Argument 'disease_list' must be specified")
+  if(!isInDataset(dataset = "Genes", disease_list = disease_list))
+    stop("Argument 'disease_list' contains one or more diseases not found in dataset")
+  if(length(disease_list) > 6)
+    stop("Argument 'disease_list' accepts a vector of up to 6 diseases" )
+  if(option != "Genes" & option != "Pathways" & option != "Ontologies")
+    stop("Argument 'option' can only be \"Genes\", \"Pathways\" or \"Ontologies\".")
   #u need a list of every set
   optionList <- generateDiseaseList(disease_list, option)
   names(optionList) = disease_list
@@ -44,22 +55,22 @@ getVennAnalysis = function(disease_list, option  = "Genes")
   venn =  ggVennDiagram::Venn(optionList)
 
   data =  ggVennDiagram::plotData_add_venn(plotData = shape, venn = venn)
-  items <- venn_region(data) %>%
+  items <- ggVennDiagram::venn_region(data) %>%
     dplyr::rowwise() %>%
     dplyr::mutate(text = stringr::str_wrap(paste0(.data$item, collapse = " "),
                                            width = 40)) %>%
     sf::st_as_sf()
   label_coord = sf::st_centroid(items$geometry) %>% sf::st_coordinates()
-  p <- ggplot(items) +
-    geom_sf(aes(fill=id), show.legend = FALSE) +
-    geom_sf_text(aes_string(label = "name"),
+  p <- ggplot2::ggplot(items) +
+    ggplot2::geom_sf(ggplot2::aes(fill=id), show.legend = FALSE) +
+    ggplot2::geom_sf_text(ggplot2::aes_string(label = "name"),
                  data = data@setLabel,
                  inherit.aes = F) +
-    geom_text(aes_string(label = "count", text = "text"),
+    ggplot2::geom_text(ggplot2::aes_string(label = "count", text = "text"),
               x = label_coord[,1],
               y = label_coord[,2],
               show.legend = FALSE) +
-    theme_void()
+    ggplot2::theme_void()
 
   ax <- list(
     showline = FALSE
@@ -140,7 +151,7 @@ getIntersections = function(disease_list, disease_sets)
   venn =  ggVennDiagram::Venn(optionList)
 
   data =  ggVennDiagram::plotData_add_venn(plotData = shape, venn = venn)
-  items <- venn_region(data) %>%
+  items <- gVennDiagram::venn_region(data) %>%
     dplyr::rowwise() %>%
     dplyr::mutate(text = stringr::str_wrap(paste0(.data$item, collapse = " "),
                                            width = 40)) %>%

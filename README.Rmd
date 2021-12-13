@@ -1,6 +1,5 @@
 ---
 output: github_document
-always_allow_html: true
 
 ---
 
@@ -13,8 +12,9 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
-
 devtools::load_all(".")
+webshot::install_phantomjs()
+
 ```
 
 # pcoskbR
@@ -26,7 +26,7 @@ pcoskbR provides an R interface to acess datasets related to PCOS in PCOSKBR2. A
 You can install the developer version from github.
 
 ``` r
-devtools::install_github("gaospecial/ggVennDiagram")
+devtools::install_github("omtarful/pcoskbR")
 ```
 # Intoduction
 PCOSKB is a manually curated knowledgebase on PCOS. PCOSKBR allows us. Information on associated genes, SNPs, diseases, gene ontologies and pathways along with supporting reference literature is collated and integrated in PCOSKB. Various tools are embedded in the database such as Comorbidity analysis for estimating the risk of diseases to co-occur with PCOS; Network analysis for identifying enriched pathways and hub genes and Venn analysis for finding common and unique genes, pathways and ontologies. The r "pcoskbR" package, provides an R interface to [PCOSKB](http://pcoskb.bicnirrh.res.in/). This vignette details pcoskbR functionalities and provides a number of example usecases that can be used as the basis for specifying your own queries.
@@ -65,6 +65,7 @@ The function returns a matrix with scores in each cell indicating the risk of co
 ### Disease-Disease Network
 This tools allows us to illustrate a disease-disease network through shared genes. It can be called using the function `getNetworkAnalysis()`. It returns a dataframe with all input diseases and associated genes and displays a network of diseases where size of the node shows the size of a node is proportional to the number of genes associated with the disease and the width of each edge is proportional to the number the shared genes. 
 ```{r}
+
 getNetworkAnalysis(disease_list = c("Cardiovascular Abnormalities","Xerotic keratitis", "Anemia",
  "Breast Cancer"), dataset = "Genes")
 

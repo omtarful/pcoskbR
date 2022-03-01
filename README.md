@@ -2,7 +2,7 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 # pcoskbR
 
-pcoskbR provides an R interface to acess datasets related to PCOS in PCOSKBR2. As well as, data mining tools for comorbidity prediction and identification of enriched pathways and hub genes.
+pcoskbR provides an R interface to access datasets related to PCOS in PCOSKBR2. As well as, data mining tools for comorbidity prediction and identification of enriched pathways and hub genes.
 
 ## Installation
 
